@@ -8,6 +8,3 @@
   * the scope of this path.
   */
 @source "../../../**/*.{html,py,js}";
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
