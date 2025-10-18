@@ -20,7 +20,15 @@ def post_create(request):
             return redirect('post_list')
     else:
         form = PostForm()
-    return render(request, 'post_create.html', {'form': form})
+
+    context = {
+        'form': form,
+        "form_heading": 'Create a new post',
+        'form_title': 'Create Post',
+        'button_text': 'Create'    
+
+    }
+    return render(request, 'post_create.html', context)
 
 def post_edit(request, post_id):
     post = get_object_or_404(Post, pk=post_id, user= request.user)
@@ -34,7 +42,14 @@ def post_edit(request, post_id):
         
     else:
         post = PostForm(instance=Post)
-    return render(request, 'post_create.html', {'form': form})
+    context = {
+        'form': form,
+        "form_heading": 'Edit your post',
+        'form_title': 'Edit Post',
+        'button_text': 'Edit'    
+
+    }
+    return render(request, 'post_create.html', context)
     
 def post_delete(request, post_id):
     post = get_object_or_404(Post, pk= post_id, user = request.user)
