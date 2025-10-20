@@ -27,8 +27,8 @@
 
               <div id="dropdown-menu-{{ post.id }}"
                 class="hidden absolute right-0 mt-2 w-40 bg-white border border-gray-200 rounded-lg shadow-lg py-2 z-20">
-                <a href="{% url 'post_create' %}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Edit</a>
-                <a href="{% url 'post_delete' %}" class="block px-4 py-2 text-sm text-red-700 hover:bg-gray-100">Delete</a>
+                <a href="{% url 'post_edit' post.id %}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Edit</a>
+                <a href="{% url 'post_delete' post.id %}" class="block px-4 py-2 text-sm text-red-700 hover:bg-gray-100">Delete</a>
                 <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Share</a>
               </div>
             </div>
@@ -39,8 +39,27 @@
           {% if post.images %}
             <div class="rounded-lg overflow-hidden border border-gray-100">
               <img src="{{ post.images.url }}" alt="Post Image" class="w-full object-cover">
-            </div>
+            </div><br>
           {% endif %}
+          <form method='POST' action="{% url 'toggle_likes' post.id %}">
+            {% csrf_token %}
+            <div id="like-btn-{{ post.id }}">
+                <button 
+                    hx-post="{% url 'toggle_likes' post.id %}" 
+                    hx-target="#like-btn-{{ post.id }}" 
+                    hx-swap="outerHTML"
+                    class="flex items-center space-x-1">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 {% if user in post.likes.all %}text-red-600 fill-current{% else %}text-gray-500{% endif %}" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                              d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364
+                                l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636
+                                l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
+                    </svg>
+                    <span id="like-count-{{ post.id }}" class="text-sm font-medium">{{ post.likes.count }}</span>
+                </button>
+            </div>
+
+          </form>
         </div>
       {% endfor %}
     </div>
