@@ -9,5 +9,10 @@ class Post(models.Model):
     updated_at = models.DateTimeField(auto_now_add=True)
     likes = models.ManyToManyField(User, related_name="liked_post", blank=True)
 
+#Keeping track of number of likes
+
+    def number_of_likes(self):
+        return self.likes.count()
+
     def __str__(self):
         return f'{self.user.username} - {self.text[:10]}'

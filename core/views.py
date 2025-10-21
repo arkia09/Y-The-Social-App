@@ -3,8 +3,10 @@ from .models import Post
 from .forms import PostForm
 from django.shortcuts import get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponse
+from django.http import JsonResponse
+from django.urls import reverse
 # Create your views here.
+
 
 
 def home(request):
@@ -64,27 +66,11 @@ def post_delete(request, post_id):
 
 @login_required
 def toggle_likes(request, post_id):
-    post = get_object_or_404(Post, id=  post_id)
+    post = Post.objects.get(id=post_id)
     if request.user in post.likes.all():
         post.likes.remove(request.user)
-        liked= False
+        liked = False
     else:
         post.likes.add(request.user)
-        liked=True
-    return HttpResponse(f"""
-    <button 
-        hx-post="/post/{post.id}/like/htmx/" 
-        hx-target="#like-btn-{post.id}" 
-        hx-swap="outerHTML"
-        class="flex items-center space-x-1">
-        
-        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 {'text-red-600 fill-current' if liked else 'text-gray-500'}" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364
-                     l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636
-                     l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
-        </svg>
-        <span id="like-count-{post.id}" class="text-sm font-medium">{post.likes.count}</span>
-    </button>
-    """
-    )
+        liked = True
+    return JsonResponse({'liked': liked, 'likes_count': post.likes.count()})
