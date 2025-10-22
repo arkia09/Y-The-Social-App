@@ -40,7 +40,8 @@ INSTALLED_APPS = [
     'core',
     "tailwind",
     "theme",
-    "django_browser_reload",        
+    "django_browser_reload",
+    "accounts",        
 ]
 TAILWIND_APP_NAME = 'theme'
 INTERNAL_IPS = ['127.0.0.1:8000']
@@ -131,3 +132,7 @@ MEDIA_ROOT = BASE_DIR / 'media'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 NPM_BIN_PATH = r"C:\Program Files\nodejs\npm.cmd"
+
+LOGIN_URL = "/accounts/login"
+LOGIN_REDIRECT_URL = "post_list"
+LOGOUT_REDIRECT_URL = "post_list"

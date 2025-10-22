@@ -16,6 +16,7 @@ def post_list(request):
     posts = Post.objects.all().order_by('-created_at')
     return render(request, 'post_list.html', {'posts': posts})
 
+@login_required
 def post_create(request):
     if request.method == 'POST':
         form =  PostForm(request.POST, request.FILES)
@@ -36,6 +37,7 @@ def post_create(request):
     }
     return render(request, 'post_create.html', context)
 
+@login_required
 def post_edit(request, post_id):
     post = get_object_or_404(Post, pk=post_id, user=request.user)
 
@@ -56,7 +58,7 @@ def post_edit(request, post_id):
     }
     return render(request, 'post_create.html', context)
 
-    
+@login_required
 def post_delete(request, post_id):
     post = get_object_or_404(Post, pk= post_id, user = request.user)
     if request.method == 'POST':
@@ -66,11 +68,10 @@ def post_delete(request, post_id):
 
 @login_required
 def toggle_likes(request, post_id):
-    post = Post.objects.get(id=post_id)
+    post = get_object_or_404(Post, id=post_id)
     if request.user in post.likes.all():
         post.likes.remove(request.user)
-        liked = False
     else:
         post.likes.add(request.user)
-        liked = True
-    return JsonResponse({'liked': liked, 'likes_count': post.likes.count()})
+    return redirect('post_list')
+

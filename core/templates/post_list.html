@@ -21,17 +21,17 @@
         </div>
 
         <!-- Dropdown Menu -->
+         {% if post.user == user %}
         <div class="relative inline-block text-left">
           <button
             id="menu-button-{{ post.id }}"
             onclick="toggleDropdown({{ post.id }})"
-            class="p-2 rounded-full hover:bg-gray-100 focus:outline-none"
+            class="p-2 rounded-full hover:bg-gray-100 focus:outline-none text-gray-600 hover:text-gray-900 transition-colors duration-200"
           >
-            <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 12h.01M12 12h.01M18 12h.01"/>
-            </svg>
+            <div class="w-5 h-5">
+              {% include "icons/dots.svg" %}
+            </div>
           </button>
-
           <div
             id="dropdown-menu-{{ post.id }}"
             class="hidden absolute right-0 mt-2 w-40 bg-white border border-gray-200 rounded-lg shadow-lg py-2 z-20"
@@ -41,6 +41,7 @@
             <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Share</a>
           </div>
         </div>
+        {% endif %}
       </div>
 
       <!-- Post Content -->
@@ -62,7 +63,9 @@
             data-post-id="{{ post.id }}"
           >
             <div class="heart-icon w-5 h-5 {% if user in post.likes.all %}text-red-600{% else %}text-gray-500{% endif %}">
-              {% include "icons/heart.svg" %}
+              <a href="{% url 'toggle_likes' post.id %}">
+                {% include "icons/heart.svg" %}
+              </a>
             </div>
             <span class="likes-count text-sm font-medium">{{ post.likes.count }}</span>
           </button>
@@ -103,47 +106,6 @@
       if (!button.contains(event.target) && !menu.contains(event.target)) {
         menu.classList.add("hidden");
       }
-    });
-  });
-</script>
-  // Like button AJAX
-  <script>
-  // Like button AJAX
-  document.querySelectorAll('.like-btn').forEach(btn => {
-    btn.addEventListener('click', function() {
-      const postId = this.dataset.postId;
-      const heart = this.querySelector('.heart-icon');
-      const countSpan = this.querySelector('.likes-count');
-
-      // Safely grab CSRF token from the page
-      const csrfInput = document.querySelector('[name=csrfmiddlewaretoken]');
-      if (!csrfInput) {
-        console.error('CSRF token not found in DOM!');
-        return;
-      }
-      const csrftoken = csrfInput.value;
-
-      fetch(`/posts/${postId}/like/`, {
-        method: 'POST',
-        headers: {
-          'X-CSRFToken': csrftoken,
-          'Accept': 'application/json'
-        }
-      })
-      .then(res => res.json())
-      .then(data => {
-        console.log('Server response:', data); // debug
-        if (!data || !('likes_count' in data)) {
-          console.error('Invalid response from server');
-          return;
-        }
-
-        // Update count and heart
-        countSpan.textContent = data.likes_count;
-        heart.classList.toggle('text-red-600', data.liked);
-        heart.classList.toggle('text-gray-500', !data.liked);
-      })
-      .catch(err => console.error('AJAX error:', err));
     });
   });
 </script>
