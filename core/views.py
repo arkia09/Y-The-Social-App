@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from .models import Post
+from .models import Post, Comment
 from .forms import PostForm
 from django.shortcuts import get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
@@ -75,3 +75,11 @@ def toggle_likes(request, post_id):
         post.likes.add(request.user)
     return redirect('post_list')
 
+
+def add_comment(request, post_id):
+    post = get_object_or_404(Post, id=post_id)
+    if request.method == 'POST':
+        body = request.POST.get("body")
+        if body:
+            Comment.objects.create(post=post, body=body, name=request.user.username)
+    return redirect(request.META.get('HTTP_REFERER'))

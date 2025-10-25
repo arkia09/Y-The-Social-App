@@ -2,12 +2,12 @@
 {% block title %}{{ form_title }} | Y{% endblock title %}
 
 {% block content %}
-<div class="max-w-xl mx-auto bg-white rounded-2xl shadow-sm border border-gray-200 p-8">
-  <h2 class="text-2xl font-semibold text-sky-700 mb-6 text-center">{{ form_heading }}</h2>
+<div class="max-w-xl mx-auto bg-[#111828]/80 rounded-2xl shadow-lg border border-gray-700 p-8">
+  <h2 class="text-2xl font-semibold text-sky-400 mb-6 text-center">{{ form_heading }}</h2>
 
-  <form method="POST" enctype= "multipart/form-data" class="space-y-4">
+  <form method="POST" enctype="multipart/form-data" class="space-y-4">
      {% csrf_token %}
-     {{form.as_p}}
+     {{ form.as_p }}
      <button 
       type="submit"
       class="w-full bg-sky-600 text-white py-2.5 rounded-lg font-medium hover:bg-sky-700 transition">
@@ -15,8 +15,8 @@
     </button>
   </form>
 
-<div class="text-center mt-4">
-    <a href="{% url 'post_list' %}" class="text-sky-600 hover:underline text-sm">
+  <div class="text-center mt-4">
+    <a href="{% url 'post_list' %}" class="text-sky-400 hover:underline text-sm">
       ← Back to Posts
     </a>
   </div>

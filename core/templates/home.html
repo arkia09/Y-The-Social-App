@@ -5,7 +5,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Home|Y</title>
      {% tailwind_css %}
 </head>
+{% block content %}
+<body>
+    <h1 class="text-4xl font-semibold text-center text-sky-400">Welcome to Y!</h1>
+    <br><br>
+    <p class="text-center"><a href="{% url 'register' %}" class="underline text-cyan-200">Sign up</a> today! And become a part of our family!</p>
+</body>
+
+{% endblock %}
+
 </html>
