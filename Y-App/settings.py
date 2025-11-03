@@ -131,7 +131,7 @@ MEDIA_ROOT = BASE_DIR / 'media'
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-NPM_BIN_PATH = r"C:\Program Files\nodejs\npm.cmd"
+NPM_BIN_PATH = '/home/simrankaur/.nvm/versions/node/v24.11.0/bin/npm'
 
 LOGIN_URL = "/accounts/login"
 LOGIN_REDIRECT_URL = "post_list"

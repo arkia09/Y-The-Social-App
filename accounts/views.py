@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from .forms import UserRegistrationForm
 from django.contrib.auth import login, logout
-
+from .models import Profile
 # Create your views here.
 def register(request):
     if request.method == 'POST':
@@ -17,3 +17,7 @@ def register(request):
         form = UserRegistrationForm()
 
     return render(request, 'registration/register.html', {'form': form})
+
+def profile(request, pk):
+    if request.user_is_authenticated:
+        pass

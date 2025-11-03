@@ -3,7 +3,6 @@ from .models import Post, Comment
 from .forms import PostForm
 from django.shortcuts import get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
-from django.http import JsonResponse
 from django.urls import reverse
 # Create your views here.
 
@@ -75,7 +74,7 @@ def toggle_likes(request, post_id):
         post.likes.add(request.user)
     return redirect('post_list')
 
-
+@login_required
 def add_comment(request, post_id):
     post = get_object_or_404(Post, id=post_id)
     if request.method == 'POST':
