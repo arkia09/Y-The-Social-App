@@ -8,7 +8,7 @@
 
     <form method="POST" class="space-y-4">
       {% csrf_token %}
-      {{ form.as_p }}
+      {{ form }}
       <button type="submit" class="w-full bg-sky-600 text-white py-2.5 rounded-lg hover:bg-sky-700 transition">
         Log In
       </button>

@@ -36,9 +36,15 @@
         {% endif %}
       </div>
     </nav>
+    {% if messages %}
+        {% for message in messages %}
+          <div class="text-center text-amber-800">{{ message }}</div>
+        {% endfor %}
+    {% endif %}
 
     <main class="flex-1 container mx-auto px-4 py-8">
-      {% block content %}{% endblock content %}
+      {% block content %}
+      {% endblock content %}
     </main>
 
     <footer class="py-4 text-center text-sm text-gray-400 border-t border-gray-700">

@@ -18,4 +18,3 @@ def create_profile(sender, instance, created, **kwargs):
         profile = Profile.objects.create(user=instance)
         profile.follows.add(profile)
 
-post_save.connect(create_profile, sender=User)
