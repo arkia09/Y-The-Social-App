@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block title %}Profiles | Y{% endblock title %}
+
+{% block content %}
+<div class="max-w-5xl mx-auto px-4 py-10">
+  <h1 class="text-3xl font-semibold text-sky-400 mb-8 text-center">User Profiles</h1>
+  <div class="flex justify-end mb-6">
+    <form method="get" action="" class="w-80">
+      <div class="relative">
+        <input type="search" name="q" value="{{ request.GET.q|default_if_none:'' }}" placeholder="Search users..." class="w-full rounded-lg border border-gray-700 bg-gray-800 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-sky-500" />
+        <button type="submit" class="absolute right-1 top-1/2 -translate-y-1/2 px-3 py-1 rounded-md text-sm">Search</button>
+      </div>
+    </form>
+  </div>
+
+  {% if profiles %}
+    <div class="flex flex-col gap-4 max-w-md mx-auto">
+        {% for profile in profiles %}
+            <div class="bg-[#0b1220]/70 border border-gray-700 rounded-2xl p-5 flex items-center gap-4">
+                {% if profile.avatar_url %}
+                <img src="{{ profile.avatar_url }}" alt="{{ profile.user.username }} avatar" class="w-16 h-16 rounded-full border border-gray-600 object-cover" />
+                {% else %}
+                <div class="w-16 h-16 rounded-full bg-gray-700 flex items-center justify-center text-lg font-medium text-gray-300">
+                    {{ profile.user.username|first|upper }}
+                </div>
+                {% endif %}
+
+                <div>
+                <a href="#" class="text-lg font-semibold text-white hover:text-sky-400">
+                    {{ profile.user.get_full_name|default:profile.user.username }}
+                </a>
+                <div class="text-sm text-gray-400">@{{ profile.user.username }}</div>
+                </div>
+            </div>
+        {% endfor %}
+  {% endif %}
+</div>
+
+{% endblock content %}
+

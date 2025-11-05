@@ -3,7 +3,7 @@ from .forms import UserRegistrationForm
 from django.contrib.auth import login, logout, authenticate
 from .models import Profile
 from django.contrib.auth.forms import AuthenticationForm
-
+from django.contrib import messages
 # Create your views here.
 def register(request):
     if request.method == 'POST':
@@ -37,7 +37,12 @@ def user_logout(request):
     return redirect('post_list')
 
 def profile_list(request):
-    return render(request, 'registration/accounts/profile_list.html')
+    if request.user.is_authenticated:
+        profiles = Profile.objects.exclude(user = request.user)
+        return render(request, 'registration/accounts/profile_list.html', {'profiles':profiles})
+    else:
+        messages.success(request, ("Please login/sign-up to view this page..."))
+        return redirect('register')
 
 def profile(request, pk):
     if request.user_is_authenticated:
