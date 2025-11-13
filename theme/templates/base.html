@@ -34,6 +34,9 @@
           <a href="{% url 'login' %}" class="text-gray-200 hover:text-sky-400 transition">Login</a>
           <a href="{% url 'register' %}" class="text-gray-200 hover:text-sky-400 transition">Sign Up</a>
         {% endif %}
+        {% if user.is_authenticated %}
+          <a href="{% url 'profile' request.user.pk %}" class="text-gray-200 hover:text-sky-400 transition">My Profile</a>
+        {% endif %}
       </div>
     </nav>
     {% if messages %}

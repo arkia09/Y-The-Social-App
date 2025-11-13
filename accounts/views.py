@@ -45,5 +45,10 @@ def profile_list(request):
         return redirect('register')
 
 def profile(request, pk):
-    if request.user_is_authenticated:
-        pass
+    if request.user.is_authenticated:
+        profile = Profile.objects.get(user_id=pk)
+        return render(request, 'registration/accounts/profile.html', {'profile':profile})
+    else:
+        messages.success(request, ("Please login/sign-up to view this page..."))
+        return redirect('register')
+
