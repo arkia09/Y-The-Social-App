@@ -1,63 +1,88 @@
 {% load static tailwind_tags %}
 <!DOCTYPE html>
-<html lang="en" class="bg-[#0b111a] text-gray-200">
+<html lang="en" class="bg-[#f7f2ea] text-[#4a3b2a]">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>{% block title %}Y{% endblock title %}</title>
+    <title>{% block title %}Quill{% endblock title %}</title>
 
     {% tailwind_css %}
-    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
 
+    <!-- Poppins for UI -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Handlee for posts / handwritten content -->
+    <link href="https://fonts.googleapis.com/css2?family=Handlee&display=swap" rel="stylesheet">
+
+    <!-- Subtle paper-like texture -->
     <style>
       body {
-        font-family: 'DM Sans', sans-serif;
+        font-family: 'Poppins', sans-serif;
+      }
+
+      .handwriting {
+        font-family: 'Handlee', cursive;
       }
     </style>
 
     {% block extra_head %}{% endblock extra_head %}
   </head>
 
-  <body class="min-h-screen flex flex-col bg-[#0b111a] text-gray-200">
-    <nav class="flex justify-between items-center px-6 py-4 bg-[#111828]/80 backdrop-blur-md border-b border-gray-700">
-      <h1 class="text-2xl font-bold text-sky-400">Y</h1>
-      <div class="flex items-center space-x-6">
-        <a href="{% url 'post_list' %}" class="text-gray-200 hover:text-sky-400 transition">Home</a>
-        <a href="#" class="text-gray-200 hover:text-sky-400 transition">Explore</a>
-        <a href="{% url 'profile_list' %}" class="text-gray-200 hover:text-sky-400 transition">Profile</a>
+  <body class="min-h-screen flex flex-col">
+
+    <!-- NAVBAR -->
+    <nav class="flex justify-between items-center px-6 py-4
+                bg-[#e8dcc5]/90 backdrop-blur-sm border-b border-[#c9b79e] shadow-sm">
+
+      <h1 class="text-2xl font-semibold text-[#6b4f32] tracking-wide">Quill</h1>
+
+      <div class="flex items-center space-x-6 text-[#6b4f32]">
+        <a href="{% url 'post_list' %}" class="hover:text-black transition">Home</a>
+        <a href="#" class="hover:text-black transition">Explore</a>
+        <a href="{% url 'profile_list' %}" class="hover:text-black transition">Profiles</a>
+
         {% if user.is_authenticated %}
           <form method="post" action="{% url 'logout' %}">
             {% csrf_token %}
-            <button class="text-gray-200 hover:text-sky-400 transition" type="submit">Logout</button>
+            <button class="hover:text-black transition" type="submit">Logout</button>
           </form>
         {% else %}
-          <a href="{% url 'login' %}" class="text-gray-200 hover:text-sky-400 transition">Login</a>
-          <a href="{% url 'register' %}" class="text-gray-200 hover:text-sky-400 transition">Sign Up</a>
+          <a href="{% url 'login' %}" class="hover:text-black transition">Login</a>
+          <a href="{% url 'register' %}" class="hover:text-black transition">Sign Up</a>
         {% endif %}
+
         {% if user.is_authenticated %}
-          <a href="{% url 'profile' request.user.pk %}" class="text-gray-200 hover:text-sky-400 transition">My Profile</a>
+          <a href="{% url 'profile' request.user.pk %}" class="hover:text-black transition">My Profile</a>
         {% endif %}
       </div>
     </nav>
+
+    <!-- Django messages -->
     {% if messages %}
+      <div class="container mx-auto px-4 mt-4">
         {% for message in messages %}
-          <div class="text-center text-amber-800">{{ message }}</div>
+          <div class="text-center text-[#7c5b3e] bg-[#f3e7d5] border border-[#c9b79e] rounded py-2 my-2">
+            {{ message }}
+          </div>
         {% endfor %}
+      </div>
     {% endif %}
 
+    <!-- MAIN AREA -->
     <main class="flex-1 container mx-auto px-4 py-8">
       {% block content %}
       {% endblock content %}
     </main>
 
-    <footer class="py-4 text-center text-sm text-gray-400 border-t border-gray-700">
+    <!-- FOOTER -->
+    <footer class="py-4 text-center text-sm text-[#7c5b3e] border-t border-[#c9b79e] bg-[#e8dcc5]">
       {% block footer %}
-        <p>© 2025 Y. Built with ❤️ using Django & Tailwind CSS.</p>
+        <p>© 2025 Quill. Crafted with Django.</p>
       {% endblock footer %}
     </footer>
 
     {% block extra_scripts %}
-    </script>
     {% endblock extra_scripts %}
+
   </body>
 </html>

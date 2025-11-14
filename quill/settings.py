@@ -56,7 +56,7 @@ MIDDLEWARE = [
     "django_browser_reload.middleware.BrowserReloadMiddleware",
 ]
 
-ROOT_URLCONF = 'Y-App.urls'
+ROOT_URLCONF = 'quill.urls'
 
 TEMPLATES = [
     {
@@ -73,7 +73,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'Y-App.wsgi.application'
+WSGI_APPLICATION = 'quill.wsgi.application'
 
 
 # Database
@@ -133,6 +133,6 @@ MEDIA_ROOT = BASE_DIR / 'media'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 NPM_BIN_PATH = '/home/simrankaur/.nvm/versions/node/v24.11.0/bin/npm'
 
-LOGIN_URL = "registration/accounts/login"
+LOGIN_URL = "accounts/login"
 LOGIN_REDIRECT_URL = "post_list"
 LOGOUT_REDIRECT_URL = "post_list"

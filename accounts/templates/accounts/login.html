@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% block title %}Login | Quill{% endblock title %}
+
+{% block content %}
+<div class="flex justify-center items-center min-h-[80vh] px-4 bg-[#f7f3ee]">
+  <div class="bg-[#efe7dd]/90 backdrop-blur-sm border border-[#d4c7b8] rounded-2xl shadow-md p-8 w-full max-w-md">
+
+    <h2 class="text-3xl font-semibold text-[#5f4634] mb-8 text-center font-[Handlee] tracking-wide">
+      Welcome Back
+    </h2>
+
+    <form method="POST" class="space-y-5 font-[Poppins]">
+      {% csrf_token %}
+      <div class="space-y-3 text-[#5c4a3a]">
+        {{ form }}
+      </div>
+
+      <button
+        type="submit"
+        class="w-full bg-[#8b715e] text-[#f9f6f2] py-3 rounded-xl hover:bg-[#7a604f] active:scale-95 transition-transform font-medium">
+        Log In
+      </button>
+    </form>
+
+    <p class="text-center text-sm text-[#7a6452] mt-6 font-[Poppins]">
+      Don't have an account?
+      <a href="{% url 'register' %}" class="text-[#8b715e] hover:underline">
+        Sign up
+      </a>
+    </p>
+
+  </div>
+</div>
+{% endblock content %}
+

@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+{% block title %}Profiles | Quill{% endblock title %}
+
+{% block content %}
+
+<div class="max-w-5xl mx-auto px-4 py-10">
+
+  <h1 class="text-3xl font-poppins font-semibold text-[#5a4634] mb-8 text-center">
+    User Profiles
+  </h1>
+
+  <!-- Search -->
+  <div class="flex justify-end mb-6">
+    <form method="get" action="" class="w-80">
+      <div class="relative">
+
+        <input type="search" name="q"
+          value="{{ request.GET.q|default_if_none:'' }}"
+          placeholder="Search users..."
+          class="w-full rounded-md border border-[#d2c4b6] bg-[#f7f0e8]/70 
+                 px-3 py-2 text-sm font-poppins 
+                 focus:outline-none focus:ring-2 focus:ring-[#b89c85]"/>
+
+        <button type="submit"
+          class="absolute right-1 top-1/2 -translate-y-1/2 
+                 px-3 py-1 rounded-md text-sm font-poppins 
+                 bg-[#b89c85] hover:bg-[#a48974] text-white transition">
+          Search
+        </button>
+
+      </div>
+    </form>
+  </div>
+
+  {% if profiles %}
+    <div class="flex flex-col gap-4 max-w-md mx-auto">
+
+      {% for profile in profiles %}
+      <div class="bg-[#f7f0e8] 
+                  bg-[url('https://www.transparenttextures.com/patterns/asfalt-light.png')]
+                  border border-[#d9c7b8] rounded-xl 
+                  p-5 flex items-center gap-4 shadow">
+
+        {% if profile.avatar_url %}
+          <img src="{{ profile.avatar_url }}"
+               alt="{{ profile.user.username }} avatar"
+               class="w-16 h-16 rounded-lg border border-[#c8b6a6] object-cover"/>
+        {% else %}
+          <div class="w-16 h-16 rounded-lg bg-[#e8ded2] border border-[#c8b6a6]
+                      flex items-center justify-center 
+                      text-xl font-poppins font-semibold text-[#6b5645]">
+            {{ profile.user.username|first|upper }}
+          </div>
+        {% endif %}
+
+        <div>
+          <a href="{% url 'profile' profile.user.pk %}"
+             class="text-lg font-poppins font-semibold text-[#5a4634] hover:text-[#7b6149] transition">
+            {{ profile.user.get_full_name|default:profile.user.username }}
+          </a>
+          <div class="text-sm font-poppins text-[#7a6a58]">
+            @{{ profile.user.username }}
+          </div>
+        </div>
+
+      </div>
+      {% endfor %}
+
+    </div>
+  {% endif %}
+</div>
+
+{% endblock content %}
+

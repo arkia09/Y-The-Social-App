@@ -1,129 +1,146 @@
-{% extends 'base.html' %} 
-{% block title %}Home | Y{% endblock title %} 
+{% extends 'base.html' %}
+{% block title %}Home | Quill{% endblock title %}
 
 {% block content %}
 <div class="max-w-2xl mx-auto">
 
-  <h2 class="text-2xl font-semibold text-sky-400 mb-6 text-center">
+  <h2 class="text-3xl font-semibold text-[#6b4f32] mb-8 text-center tracking-wide">
     Recent Posts
   </h2>
 
   {% if posts %}
   <div class="space-y-6">
+
     {% for post in posts %}
-    <div class="bg-[#111828] rounded-xl shadow-md border border-gray-700 hover:shadow-lg transition p-5">
-      
-      <div class="flex items-start justify-between relative mb-2">
+    <div class="bg-[#f4ede4]/70 border border-[#d3c3ac] p-5 shadow-sm hover:shadow-md transition
+                rounded-none backdrop-blur-sm">
+
+      <!-- Header -->
+      <div class="flex items-start justify-between mb-3">
         <div>
-          <h3 class="font-semibold text-gray-200">{{ post.user.username }}</h3>
-          <p class="text-sm text-gray-400">{{ post.created_at|date:"M d, Y H:i" }}</p>
+          <h3 class="font-semibold text-[#4a3b2a]">{{ post.user.username }}</h3>
+          <p class="text-xs text-[#7c6a54]">{{ post.created_at|date:"M d, Y H:i" }}</p>
         </div>
-       
+
         {% if post.user == user %}
         <div class="relative inline-block text-left">
-          <button
-            id="menu-button-{{ post.id }}"
-            onclick="toggleDropdown({{ post.id }})"
-            class="p-2 rounded-full hover:bg-gray-700 focus:outline-none text-gray-400 hover:text-gray-200 transition-colors duration-200"
-          >
-            <div class="w-5 h-5">
-              {% include "icons/dots.svg" %}
-            </div>
+          <button id="menu-button-{{ post.id }}"
+                  onclick="toggleDropdown({{ post.id }})"
+                  class="p-2 hover:bg-[#e8dcc5] border border-transparent hover:border-[#c9b79e] transition">
+            <div class="w-5 h-5">{% include "icons/dots.svg" %}</div>
           </button>
-          <div
-            id="dropdown-menu-{{ post.id }}"
-            class="hidden absolute right-0 mt-2 w-40 bg-[#1f2937] border border-gray-700 rounded-lg shadow-lg py-2 z-20"
-          >
-            <a href="{% url 'post_edit' post.id %}" class="block px-4 py-2 text-sm text-gray-200 hover:bg-gray-600">Edit</a>
-            <a href="{% url 'post_delete' post.id %}" class="block px-4 py-2 text-sm text-red-500 hover:bg-gray-600">Delete</a>
-            <a href="#" class="block px-4 py-2 text-sm text-gray-200 hover:bg-gray-600">Share</a>
+
+          <div id="dropdown-menu-{{ post.id }}"
+               class="hidden absolute right-0 mt-2 w-40 bg-[#f4ede4] border border-[#c9b79e]
+                      shadow-md py-2 z-20 rounded-none">
+            <a href="{% url 'post_edit' post.id %}"
+               class="block px-4 py-2 text-sm text-[#4a3b2a] hover:bg-[#e8dcc5]">Edit</a>
+            <a href="{% url 'post_delete' post.id %}"
+               class="block px-4 py-2 text-sm text-red-600 hover:bg-[#e8dcc5]">Delete</a>
+            <a href="#" class="block px-4 py-2 text-sm text-[#4a3b2a] hover:bg-[#e8dcc5]">Share</a>
           </div>
         </div>
         {% endif %}
       </div>
-       <br>
-      <p class="text-gray-200 whitespace-pre-line mb-3">{{ post.text }}</p>
 
+      <!-- Post text -->
+      <p class="text-[#4a3b2a] whitespace-pre-line mb-3 handwriting text-lg leading-relaxed">
+        {{ post.text }}
+      </p>
+
+      <!-- Images -->
       {% if post.images %}
-      <div class="rounded-lg overflow-hidden border border-gray-700 mb-3">
-        <img src="{{ post.images.url }}" alt="Post Image" class="w-full object-cover"/>
+      <div class="overflow-hidden border border-[#d3c3ac] mb-3">
+        <img src="{{ post.images.url }}" class="w-full object-cover">
       </div>
       {% endif %}
 
+      <!-- Videos -->
       {% if post.videos %}
-      <div class="rounded-lg overflow-hidden border border-gray-700 mb-3">
-        <video controls class='w-full rounded-lg'>
+      <div class="overflow-hidden border border-[#d3c3ac] mb-3">
+        <video controls class="w-full">
           <source src="{{ post.videos.url }}" type="video/mp4">
         </video>
       </div>
       {% endif %}
-      <br>
 
-    
-      <form method="POST" class="mb-4">
+      <!-- Likes + Comments -->
+      <div class="flex items-center space-x-4 mt-3">
+
+        <!-- Like button -->
+        <a href="{% url 'toggle_likes' post.id %}"
+           class="flex items-center space-x-1 text-[#7c6a54] hover:text-[#4a3b2a] transition">
+          <div class="w-5 h-5">
+            {% include "icons/heart.svg" %}
+          </div>
+          <span class="text-sm">{{ post.likes.count }}</span>
+        </a>
+
+        <!-- Comments toggle -->
+        <div class="flex items-center space-x-1 text-[#7c6a54] hover:text-[#4a3b2a] cursor-pointer transition"
+             onclick="toggleComments('{{ post.id }}')">
+          <div class="w-5 h-5">
+            {% include "icons/comments.svg" %}
+          </div>
+          <span class="text-sm">{{ post.comments.count }}</span>
+        </div>
+
+      </div>
+
+      <!-- Comments section -->
+      <div id="comments-{{ post.id }}" class="hidden mt-6 text-sm text-[#4a3b2a]">
+
+        {% if not post.comments.all %}
+          <p class="text-[#7c6a54]">No comments yet.</p>
+        {% else %}
+          {% for comment in post.comments.all %}
+          <div class="mb-3 border-b border-[#d3c3ac] pb-2">
+            <strong>{{ comment.name }}</strong>
+            <span class="text-xs text-[#7c6a54]">
+              • {{ comment.date_added }}
+            </span>
+            <br>
+            <span class="handwriting text-base">{{ comment.body }}</span>
+          </div>
+          {% endfor %}
+        {% endif %}
+      </div>
+
+      <!-- Add comment -->
+      <form action="{% url 'add_comment' post.id %}" method="POST"
+            class="mt-4 flex items-center space-x-2">
         {% csrf_token %}
-        <div class="flex items-center space-x-2 mb-4">
-          <button
-            type="button"
-            class="like-btn flex items-center space-x-2"
-            data-post-id="{{ post.id }}">
-            <div class="heart-icon w-5 h-5 {% if user in post.likes.all %}text-red-500{% else %}text-gray-400{% endif %}">
-              <a href="{% url 'toggle_likes' post.id %}">
-                {% include "icons/heart.svg" %}
-              </a>
-            </div>
-            <span class="likes-count text-sm font-medium">{{ post.likes.count }}</span>
-          </button>
+        <input type="text" name="body" placeholder="Write a comment..."
+               class="flex-1 bg-[#f4ede4] border border-[#c9b79e] px-3 py-2 text-[#4a3b2a]
+                      focus:outline-none focus:border-[#6b4f32] rounded-none">
+        <button type="submit"
+                class="bg-[#6b4f32] text-white px-4 py-2 hover:bg-[#4a3b2a] transition rounded-none">
+          Post
+        </button>
+      </form>
 
-            <div class="flex items-center space-x-2 text-gray-400 hover:text-gray-200 cursor-pointer"
-                onclick="toggleComments('{{ post.id }}')">
-              <div class="w-5 h-5">
-                {% include "icons/comments.svg" %}
-              </div>
-              <span class="comments-count text-sm font-medium">{{ post.comments.count }}</span>
-            </div>
-          </div>
-        <div id="comments-{{ post.id }}" class="hidden mt-9 ml-7 text-sm text-gray-300">
-            {% if not post.comments.all %}
-              <p>No comments yet... <a href="#" class="underline">Add one?</a></p>
-            {% else %}
-              {% for comment in post.comments.all %}
-                <div class="mb-2 mt-4 border-b border-gray-700 pb-1">
-                  <strong>{{ comment.name }}</strong>
-                  <span class="text-xs text-gray-500 mb-4">— {{ comment.date_added }}</span><br>
-                  {{ comment.body }}
-                </div>
-              {% endfor %}
-            {% endif %}
-          </div>
-      </form>
-      <form action="{% url 'add_comment' post.id %}" method="POST" class="mt-4 flex items-center space-x-2">
-              {% csrf_token %}
-              <input type="text" name="body" placeholder="Type a comment..."
-              class="flex-1 bg-gray-800 text-gray-100 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"/>
-              <button type="submit" class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-2 rounded-md">Post</button> 
-      </form>
     </div>
     {% endfor %}
   </div>
 
   {% else %}
-  <p class="text-center text-gray-400">
-    No posts yet.
-    <a href="{% url 'post_create' %}" class="text-sky-400 hover:underline">Create one?</a>
-  </p>
+    <p class="text-center text-[#7c6a54]">
+      No posts yet.
+      <a href="{% url 'post_create' %}" class="underline hover:text-[#4a3b2a]">Create one?</a>
+    </p>
   {% endif %}
 
+  <!-- New Post button -->
   <div class="mt-10 flex justify-center">
-    <a href="{% url 'post_create' %}" class="bg-sky-600 text-white px-5 py-2 rounded-lg hover:bg-sky-700 transition">
+    <a href="{% url 'post_create' %}"
+       class="bg-[#6b4f32] text-white px-6 py-2 hover:bg-[#4a3b2a] transition rounded-none">
       + New Post
     </a>
+    
   </div>
 
 </div>
 {% endblock content %}
-
-
 
 {% block extra_scripts %}
 <script>
@@ -141,8 +158,7 @@
       }
     });
   });
-</script>
-<script>
+
   function toggleComments(postId) {
     const section = document.getElementById(`comments-${postId}`);
     section.classList.toggle('hidden');

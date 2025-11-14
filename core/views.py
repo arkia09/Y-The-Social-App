@@ -14,25 +14,29 @@ def post_list(request):
     posts = Post.objects.all().order_by('-created_at')
     return render(request, 'core/post_list.html', {'posts': posts})
 
-@login_required
+
 def post_create(request):
-    if request.method == 'POST':
-        form =  PostForm(request.POST, request.FILES)
-        if form.is_valid():
-            post = form.save(commit=False)
-            post.user = request.user
-            post.save()
-            return redirect('post_list')
+    if request.user.is_authenticated:
+        if request.method == 'POST': 
+            form =  PostForm(request.POST, request.FILES)
+            if form.is_valid():
+                post = form.save(commit=False)
+                post.user = request.user
+                post.save()
+                return redirect('post_list')
+        else:
+            form = PostForm()
+
+        context = {
+            'form': form,
+            "form_heading": 'Create a new post',
+            'form_title': 'Create Post',
+            'button_text': 'Create'    
+
+        }
     else:
-        form = PostForm()
-
-    context = {
-        'form': form,
-        "form_heading": 'Create a new post',
-        'form_title': 'Create Post',
-        'button_text': 'Create'    
-
-    }
+        messages.success(request, "Please Login or Sign-up to create a new post")
+        return redirect('register')
     return render(request, 'core/post_create.html', context)
 
 @login_required
@@ -67,7 +71,7 @@ def post_delete(request, post_id):
 
 def toggle_likes(request, post_id):
     if not request.user.is_authenticated:
-        messages.info(request, "You are required to sign up or log in to like a post")
+        messages.info(request, "Please Login or Sign-Up to like a post")
         return redirect('register')
     
     post = get_object_or_404(Post, id=post_id)
@@ -80,7 +84,7 @@ def toggle_likes(request, post_id):
 
 def add_comment(request, post_id):
     if not request.user.is_authenticated:
-        messages.info(request, "You are required to sign up or log in to add a comment")
+        messages.info(request, "Please Login or Sign-Up to make a comment")
         return redirect('register')
     
     post = get_object_or_404(Post, id=post_id)

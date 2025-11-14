@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+{% block title %}Register | Quill{% endblock %}
+
+{% block content %}
+<div class="flex justify-center items-center min-h-[80vh]">
+
+  <div class="w-full max-w-md p-8 rounded-2xl shadow-md border border-[#d9c7b8]
+              bg-[#f7f0e8] bg-[url('https://www.transparenttextures.com/patterns/asfalt-light.png')]">
+
+    <h2 class="text-2xl font-[Handlee] font-semibold text-center text-[#5a4634] mb-6">
+      Create your account
+    </h2>
+
+    <form method="POST" class="space-y-4 font-poppins text-[#5a4634]">
+      {% csrf_token %}
+      <div class="space-y-4">
+        {% for field in form %}
+          <div class="space-y-1">
+            <label class="block text-sm font-medium">{{ field.label }}</label>
+            {{ field }}
+            {% if field.errors %}
+              <p class="text-sm text-red-600">{{ field.errors.0 }}</p>
+            {% endif %}
+          </div>
+        {% endfor %}
+      </div>
+
+      <button type="submit"
+      class="w-full py-3 rounded-lg text-white bg-[#7b6149] hover:bg-[#6a543f] transition">
+        Sign Up
+      </button>
+
+    <p class="text-center text-sm font-poppins text-[#7a6a58] mt-4">
+      Already have an account?
+      <a href="{% url 'login' %}" class="text-[#7b6149] font-medium hover:underline">
+        Log in
+      </a>
+    </p>
+
+  </div>
+</div>
+{% endblock %}
+
+

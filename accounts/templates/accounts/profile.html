@@ -1,0 +1,118 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="max-w-3xl mx-auto mt-10 
+            bg-[#f7f0e8] 
+            bg-[url('https://www.transparenttextures.com/patterns/asfalt-light.png')] 
+            border border-[#d9c7b8] 
+            rounded-xl shadow-md p-8">
+
+  <!-- Header -->
+  <div class="flex items-center gap-6">
+
+    <!-- Profile Initial -->
+    <div class="w-20 h-20 rounded-lg 
+                bg-[#e8ded2] 
+                flex items-center justify-center 
+                text-3xl font-poppins font-semibold text-[#6b5645] 
+                border border-[#c8b6a6]">
+      {{ profile.user.username|first|upper }}
+    </div>
+
+    <div>
+      <h1 class="text-2xl font-poppins font-semibold text-[#5a4634]">
+        {{ profile.user.username }}'s Profile
+      </h1>
+      <p class="text-sm font-poppins text-[#7a6a58] mt-1">
+        @{{ profile.user.username }}
+      </p>
+    </div>
+
+    <!-- Follow / Unfollow -->
+    <div>
+      <form method="POST">
+        {% csrf_token %}
+        {% if profile in user.profile.follows.all %}
+          <button type="submit" name="follow" value="unfollow"
+                  class="px-4 py-2 bg-[#7b6149] hover:bg-[#6a543f] 
+                         text-white rounded-md font-poppins transition">
+            Unfollow
+          </button>
+        {% else %}
+          <button type="submit" name="follow" value="follow"
+                  class="px-4 py-2 bg-[#7b6149] hover:bg-[#6a543f] 
+                         text-white rounded-md font-poppins transition">
+            Follow
+          </button>
+        {% endif %}
+      </form>
+    </div>
+  </div>
+
+  <!-- Name -->
+  <div class="mt-6">
+    <h2 class="text-xl font-poppins font-semibold text-[#5a4634]">Name</h2>
+    <p class="mt-1 text-[#6b5645] font-handlee text-lg">
+      {{ profile.name }}
+    </p>
+  </div>
+
+  <!-- Bio -->
+  <div class="mt-6">
+    <h2 class="text-xl font-poppins font-semibold text-[#5a4634]">Bio</h2>
+
+    {% if profile.bio %}
+      <p class="mt-2 text-[#6b5645] leading-relaxed font-handlee text-lg">
+        {{ profile.bio }}
+      </p>
+    {% else %}
+      <p class="mt-2 italic text-[#8b7d70] font-poppins">
+        No bio added yet.
+      </p>
+    {% endif %}
+  </div>
+
+  <!-- Following + Followers -->
+  <div class="mt-10 grid grid-cols-1 sm:grid-cols-2 gap-6">
+
+    <!-- Following -->
+    <div>
+      <h3 class="text-lg font-poppins font-semibold text-[#5a4634] mb-2">
+        Following
+      </h3>
+
+      <div class="bg-[#efe7dd] border border-[#d6c8b8] rounded-md p-3 space-y-2">
+        {% for following in profile.follows.all %}
+          <a href="{% url 'profile' following.user.id %}"
+             class="block font-handlee text-[#5a4634] hover:text-[#7b6149] transition">
+            {{ following }}
+          </a>
+        {% empty %}
+          <p class="italic text-[#8b7d70] font-poppins">Not following anyone yet.</p>
+        {% endfor %}
+      </div>
+    </div>
+
+    <!-- Followers -->
+    <div>
+      <h3 class="text-lg font-poppins font-semibold text-[#5a4634] mb-2">
+        Followers
+      </h3>
+
+      <div class="bg-[#efe7dd] border border-[#d6c8b8] rounded-md p-3 space-y-2">
+        {% for follower in profile.followed_by.all %}
+          <a href="{% url 'profile' follower.user.id %}"
+             class="block font-handlee text-[#5a4634] hover:text-[#7b6149] transition">
+            {{ follower }}
+          </a>
+        {% empty %}
+          <p class="italic text-[#8b7d70] font-poppins">No followers yet.</p>
+        {% endfor %}
+      </div>
+    </div>
+
+  </div>
+
+</div>
+
+{% endblock %}

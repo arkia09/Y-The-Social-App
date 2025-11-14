@@ -18,7 +18,7 @@ def register(request):
     else:
         form = UserRegistrationForm()
 
-    return render(request, 'registration/accounts/register.html', {'form': form})
+    return render(request, 'accounts/register.html', {'form': form})
 
 
 def user_login(request):
@@ -30,7 +30,7 @@ def user_login(request):
             return redirect('post_list')
     else:
         form = AuthenticationForm()
-    return render(request, 'registration/accounts/login.html', {'form': form})
+    return render(request, 'accounts/login.html', {'form': form})
 
 def user_logout(request):
     logout(request)
@@ -39,7 +39,7 @@ def user_logout(request):
 def profile_list(request):
     if request.user.is_authenticated:
         profiles = Profile.objects.exclude(user = request.user)
-        return render(request, 'registration/accounts/profile_list.html', {'profiles':profiles})
+        return render(request, 'accounts/profile_list.html', {'profiles':profiles})
     else:
         messages.success(request, ("Please login/sign-up to view this page..."))
         return redirect('register')
@@ -47,7 +47,16 @@ def profile_list(request):
 def profile(request, pk):
     if request.user.is_authenticated:
         profile = Profile.objects.get(user_id=pk)
-        return render(request, 'registration/accounts/profile.html', {'profile':profile})
+        if request.method == 'POST':
+            current_user_profile =  request.user.profile
+            action = request.POST['follow']
+            if action == 'unfollow':
+                current_user_profile.follows.remove(profile)
+            else:
+                current_user_profile.follows.add(profile)
+            
+            current_user_profile.save()
+        return render(request, 'accounts/profile.html', {'profile':profile})
     else:
         messages.success(request, ("Please login/sign-up to view this page..."))
         return redirect('register')
